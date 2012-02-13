@@ -1,83 +1,17 @@
-<!doctype html>
+<%
+title = @title ? @title+TITLE_APPENDAGE : DEFAULT_TITLE
+if not params.has_key? "pushState"
+%><!doctype html>
 
 <html>
 
 	<head>
 		<meta name="viewport" content="width=800, user-scalable=0">
-		<title><%= @title ? @title+TITLE_APPENDAGE : DEFAULT_TITLE %></title>
+		<title><%= Rack::Utils.escape_html title %></title>
+		<link href="/css/main.css" type="text/css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-		<style>
-		* {
-			margin: 0;
-			outline: 0;
-			border: 0;
-			padding: 0;
-		}
-		a {
-			cursor: pointer;
-		}
-		body {
-			background: #EEE url("/gfx/bkg.png");
-		}
-		#doc {
-			width: 600px;
-			height: 300px;
-			font-family: monospace;
-			white-space: pre;
-		}
-		#header {
-			position: relative;
-			min-width: 800px;
-			background: #333 url("/gfx/bkg.png");
-			box-shadow: 0 1px 3px rgba(0, 0, 0, .5);
-		}
-		#logo {
-			display: block;
-			height: 100px;
-			background: url("/gfx/logo.png") center center no-repeat;
-		}
-		#wrap {
-			margin: 0 auto;
-			width: 800px;
-		}
-		#wrap2 {
-			background: #FFF url("/gfx/bkg.png");
-			box-shadow: 0 1px 3px rgba(0, 0, 0, .5);
-		}
-		#footer {
-			text-align: center;
-			padding: 10px;
-		}
-		</style>
-		<script>
-		if (typeof docdock === "undefined" || docdock === null) {
-			window.docdock = {
-				xhr: {},
-				init: function() {
-					$("#saveDoc").click(function() {
-						docdock.xhr = $.post(
-							"/",
-							{
-								doc: $("#doc").val()
-							},
-							function(data) {
-								if (data.status == "doc empty")
-									alert("The doc is empty!");
-								else
-									location.assign("/"+data.status);
-							},
-							"json"
-						);
-					});
-				},
-				abortXhr: function() {
-					if (docdock.xhr.abort != null)
-						docdock.xhr.abort();
-				}
-			}
-			$(docdock.init);
-		}
-		</script>
+		<script src="https://raw.github.com/caseyWebDev/caseyWebDev/master/js/caseyWebDev.js"></script>
+		<script src="/js/main.js"></script>
 	</head>
 	
 	<body>
@@ -85,21 +19,22 @@
 			<a href="/" id="logo"></a>
 		</div>
 		<div id="wrap">
-			<div id="wrap2">
-				<% if @id %>
-				id = <%= @id %><br>
-				<div id="doc"><%= Rack::Utils.escape_html @doc %></div>
-				<% else %>
-				<textarea id="doc"></textarea><br>
-				<a id="saveDoc">Save doc</a><br><br>
-				<% end %>
-				<strong>Recent docs:</strong><br>
-				<% @recentDocs.each do |i| %>
-				<a href="/<%= i[:id]%>"><%= Rack::Utils.escape_html i[:doc] %></a><br>
-				<% end %>
+			<div id="main">
+<% else %><%= "<!--pushState-->\n#{title}\n" %><% end %>
+				<textarea id="doc" data-placeholder="Paste or write your doc here and hit save.">
+<%= @doc ? Rack::Utils.escape_html(@doc) : "" %></textarea>
+				<a id="saveDoc">Save doc</a>
+				<strong>Recent docs</strong>
+				<div id="recentDocs">
+					<% @recentDocs.each do |i| %>
+					<a href="/<%= i[:id]%>" data-push-state><%= Rack::Utils.escape_html i[:doc] %></a>
+					<% end %>
+				</div>
+<% if not params.has_key? "pushState" %>
 			</div>
 			<div id="footer">Copyright &copy; docdock <%= Time.new.year %>. All rights reserved.</div>
 		</div>
 	</body>
 	
 </html>
+<% end %>

@@ -3,6 +3,10 @@ require "redis"
 require "json"
 require_relative "anyBase"
 
+def getTitle(doc)
+	doc.strip[/^[^\n]+(?=\n|$)/][0,TITLE_LENGTH]
+end
+
 configure do
 	#set the base string we'll use for converting from base 10
 	BASE_62 = ("0".."9").to_a.join("")+("a".."z").to_a.join("")+("A".."Z").to_a.join("")
@@ -14,19 +18,20 @@ configure do
 	DEFAULT_TITLE = "docdock | The Dock for Docs"
 	#set the title appendage so that the final title looks like @title+TITLE_APPENDAGE
 	TITLE_APPENDAGE = " | docdock"
+	#max characters of doc to show as the title
+	TITLE_LENGTH = 64
 	#number of recent docs to show
-	RECENT_DOCS = 10
+	RECENT_DOCS = 30
 	set :public_folder, File.dirname(__FILE__)+"/../public"
 end
 
 get "/*" do
 	if params[:splat][0] != ""
-		@id = params[:splat][0]
-		if REDIS.exists @id
-			@doc = REDIS.get @id
-		else
+		@doc = REDIS.get params[:splat][0]
+		unless @doc
 			redirect "/"
 		end
+		@title = getTitle @doc
 	end
 	lastId = REDIS.get("_id").to_i
 	@recentDocs = []
@@ -34,7 +39,7 @@ get "/*" do
 		id = lastId-i
 		if id > 0
 			idBase62 = id.b BASE_62
-			@recentDocs << { id: idBase62, doc: REDIS.get(idBase62) }
+			@recentDocs << { id: idBase62, doc: getTitle(REDIS.get(idBase62)) }
 		else
 			break
 		end

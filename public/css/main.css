@@ -1,0 +1,93 @@
+* {
+	margin: 0;
+	outline: 0;
+	border: 0;
+	padding: 0;
+	word-wrap: break-word;
+}
+a {
+	color: #390;
+	cursor: pointer;
+	text-decoration: none;
+}
+a:hover {
+	color: #280
+}
+a:active {
+	color: #170;
+}
+body {
+	background: #EEE url("/gfx/bkg.png");
+	font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+	font-size: 10px;
+	color: #333;
+}
+#header {
+	position: relative;
+	min-width: 800px;
+	background: #333 url("/gfx/bkg.png");
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+}
+#logo {
+	display: block;
+	height: 100px;
+	background: url("/gfx/logo.png") center center no-repeat;
+}
+#wrap {
+	margin: 0 auto;
+	width: 800px;
+}
+#main {
+	padding: 10px;
+	background: #FFF url("/gfx/bkg.png");
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+}
+#doc {
+	padding: 10px;
+	width: 760px;
+	height: 410px;
+	font-family: monospace;
+	resize: none;
+	color: #333;
+	background: #FFF;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .25) inset;
+}
+#saveDoc {
+	display: block;
+	margin: 10px 0;
+	padding: 10px;
+	color: #FFF;
+	font-size: 20px;
+	font-weight: bold;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+	background: #390 url("/gfx/bkg.png");
+	text-align: center;
+}
+#saveDoc:hover {
+	background-color: #280;
+}
+#saveDoc:active {
+	background-color: #170;
+}
+#recentDocs {
+	-webkit-column-count: 3;
+	-moz-column-count: 3;
+	column-count: 3;
+	-webkit-column-gap: 0;
+	-moz-column-gap: 0;
+	column-gap: 0;
+}
+#recentDocs a {
+	display: block;
+	padding: 10px;
+	-webkit-column-break-inside: avoid;
+	-moz-column-break-inside: avoid;
+	column-break-inside: avoid;
+}
+#recentDocs a:hover {
+	background: #FFF;
+}
+#footer {
+	text-align: center;
+	padding: 10px;
+}
