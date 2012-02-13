@@ -26,9 +26,7 @@ if not params.has_key? "pushState"
 				<a id="saveDoc">Save doc</a>
 				<strong>Recent docs</strong>
 				<div id="recentDocs">
-					<% @recentDocs.each do |i| %>
-					<a href="/<%= i[:id]%>" data-push-state><%= Rack::Utils.escape_html i[:doc] %></a>
-					<% end %>
+					<% @recentDocs.each do |i| %><a href="/<%= i[:id]%>" data-push-state><%= Rack::Utils.escape_html i[:doc] %></a><% end %>
 				</div>
 <% if not params.has_key? "pushState" %>
 			</div>

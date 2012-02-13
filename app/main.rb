@@ -4,7 +4,8 @@ require "json"
 require_relative "anyBase"
 
 def getTitle(doc)
-	doc.strip[/^[^\n]+(?=\n|$)/][0,TITLE_LENGTH]
+	firstLine = doc.strip[/^[^\n]+(?=\n|$)/]
+	firstLine.length <= TITLE_LENGTH ? firstLine : firstLine[0,TITLE_LENGTH-3]+"..."
 end
 
 configure do
@@ -12,7 +13,7 @@ configure do
 	BASE_62 = ("0".."9").to_a.join("")+("a".."z").to_a.join("")+("A".."Z").to_a.join("")
 	#define our Redis instance (params from Heroku getting started)
 	uri = URI.parse("redis://SituatedBanana:fcfa73afd9670528dde35516b026f4dd@carp.redistogo.com:9422/")
-  	REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+  	REDIS = Redis.new#(:host => uri.host, :port => uri.port, :password => uri.password)
 	REDIS.select 0
 	REDIS.setnx "_id", 0
 	#set the default page title, that is, if @title is never set
@@ -54,8 +55,11 @@ post "*" do
 		if params["doc"].strip == ""
 			response["status"] = "doc empty"
 		else
-			id = REDIS.incr("_id").b BASE_62
-			REDIS.set id, params["doc"]
+			id = REDIS.get "_id"
+			unless REDIS.get(id) == params["doc"]
+				id = REDIS.incr "_id"
+				REDIS.set id.b(BASE_62), params["doc"]
+			end
 			response["status"] = id
 		end
 	end

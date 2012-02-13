@@ -18,9 +18,10 @@ if (typeof docdock === "undefined" || docdock === null) {
 							if (data.status == "doc empty") {
 								alert("The doc is empty!");
 								$("#doc").val("").focus();
-							} else
+							} else {
 								caseyWebDev.State.cache = [];
 								caseyWebDev.State.push("/"+data.status);
+							}
 						},
 						"json"
 					);
