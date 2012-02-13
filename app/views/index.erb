@@ -21,7 +21,7 @@ if not params.has_key? "pushState"
 		<div id="wrap">
 			<div id="main">
 <% else %><%= "<!--pushState-->\n#{title}\n" %><% end %>
-				<textarea id="doc" data-placeholder="Paste or write your doc here and hit save.">
+				<textarea id="doc" data-placeholder="Paste or type your doc here and hit save doc.">
 <%= @doc ? Rack::Utils.escape_html(@doc) : "" %></textarea>
 				<a id="saveDoc">Save doc</a>
 				<strong>Recent docs</strong>
