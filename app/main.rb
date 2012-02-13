@@ -13,7 +13,6 @@ configure do
 	#define our Redis instance (params from Heroku getting started)
 	uri = URI.parse("redis://SituatedBanana:fcfa73afd9670528dde35516b026f4dd@carp.redistogo.com:9422/")
   	REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-	REDIS = Redis.new
 	REDIS.select 0
 	REDIS.setnx "_id", 0
 	#set the default page title, that is, if @title is never set
