@@ -11,8 +11,8 @@ configure do
 	#set the base string we'll use for converting from base 10
 	BASE_62 = ("0".."9").to_a.join("")+("a".."z").to_a.join("")+("A".."Z").to_a.join("")
 	#define our Redis instance (params from Heroku getting started)
-	uri = URI.parse ENV["REDISTOGO_URL"]
-  	REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+	uri = URI.parse("redis://SituatedBanana:fcfa73afd9670528dde35516b026f4dd@carp.redistogo.com:9422/")
+  	REDIS = Redis.new uri.host, uri.port, uri.password
 	REDIS = Redis.new
 	REDIS.select 0
 	REDIS.setnx "_id", 0
