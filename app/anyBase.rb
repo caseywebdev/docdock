@@ -23,6 +23,10 @@ module AnyBaseSToI
 	end
 end
 
+class Float
+	include AnyBaseIToS
+end
+
 class Fixnum
 	include AnyBaseIToS
 end

@@ -16,6 +16,7 @@ configure do
 	TITLE_APPENDAGE = " | docdock"
 	#number of recent docs to show
 	RECENT_DOCS = 10
+	set :public_folder, File.dirname(__FILE__)+"/../public"
 end
 
 get "/*" do

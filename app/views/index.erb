@@ -3,17 +3,50 @@
 <html>
 
 	<head>
+		<meta name="viewport" content="width=800, user-scalable=0">
 		<title><%= @title ? @title+TITLE_APPENDAGE : DEFAULT_TITLE %></title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 		<style>
+		* {
+			margin: 0;
+			outline: 0;
+			border: 0;
+			padding: 0;
+		}
 		a {
 			cursor: pointer;
+		}
+		body {
+			background: #EEE url("/gfx/bkg.png");
 		}
 		#doc {
 			width: 600px;
 			height: 300px;
 			font-family: monospace;
 			white-space: pre;
+		}
+		#header {
+			position: relative;
+			min-width: 800px;
+			background: #333 url("/gfx/bkg.png");
+			box-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+		}
+		#logo {
+			display: block;
+			height: 100px;
+			background: url("/gfx/logo.png") center center no-repeat;
+		}
+		#wrap {
+			margin: 0 auto;
+			width: 800px;
+		}
+		#wrap2 {
+			background: #FFF url("/gfx/bkg.png");
+			box-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+		}
+		#footer {
+			text-align: center;
+			padding: 10px;
 		}
 		</style>
 		<script>
@@ -48,18 +81,25 @@
 	</head>
 	
 	<body>
-		<h1>docdock</h1>
-		<% if @id %>
-		id = <%= @id %><br>
-		<div id="doc"><%= Rack::Utils.escape_html @doc %></div>
-		<% else %>
-		<textarea id="doc"></textarea><br>
-		<a id="saveDoc">Save doc</a><br><br>
-		<% end %>
-		<strong>Recent docs:</strong><br>
-		<% @recentDocs.each do |i| %>
-		<a href="/<%= i[:id]%>"><%= Rack::Utils.escape_html i[:doc] %></a><br>
-		<% end %>
+		<div id="header">
+			<a href="/" id="logo"></a>
+		</div>
+		<div id="wrap">
+			<div id="wrap2">
+				<% if @id %>
+				id = <%= @id %><br>
+				<div id="doc"><%= Rack::Utils.escape_html @doc %></div>
+				<% else %>
+				<textarea id="doc"></textarea><br>
+				<a id="saveDoc">Save doc</a><br><br>
+				<% end %>
+				<strong>Recent docs:</strong><br>
+				<% @recentDocs.each do |i| %>
+				<a href="/<%= i[:id]%>"><%= Rack::Utils.escape_html i[:doc] %></a><br>
+				<% end %>
+			</div>
+			<div id="footer">Copyright &copy; docdock <%= Time.new.year %>. All rights reserved.</div>
+		</div>
 	</body>
 	
 </html>
