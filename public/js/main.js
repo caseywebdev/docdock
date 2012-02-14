@@ -9,6 +9,7 @@ if (typeof docdock === "undefined" || docdock === null) {
 			xhr: {},
 			init: function() {
 				$("#main").on("click", "#saveDoc", function() {
+					caseyWebDev.PopUp.show("Saving doc...");
 					docdock.xhr = $.post(
 						"/",
 						{
@@ -16,9 +17,10 @@ if (typeof docdock === "undefined" || docdock === null) {
 						},
 						function(data) {
 							if (data.status == "doc empty") {
-								alert("The doc is empty!");
+								caseyWebDev.PopUp.show("The doc is empty!", 1000);
 								$("#doc").val("").focus();
 							} else {
+								caseyWebDev.PopUp.show("Doc saved!", 1000);
 								caseyWebDev.State.cache = [];
 								caseyWebDev.State.push("/"+data.status);
 							}
@@ -34,6 +36,18 @@ if (typeof docdock === "undefined" || docdock === null) {
 		},
 		State: {
 			init: function() {
+				caseyWebDev.State.clear = function(url) {
+					clearTimeout(docdock.State.loadingTimeout);
+				};
+				caseyWebDev.State.before = function(url) {
+					docdock.State.loadingTimeout = setTimeout(function() {
+		        		caseyWebDev.PopUp.show("Loading...");
+		        	}, 200);
+				};
+				caseyWebDev.State.after = function(url) {
+					clearTimeout(docdock.State.loadingTimeout);
+			        caseyWebDev.PopUp.hide();
+				};
 				caseyWebDev.State.parse = function(url) {
 			    	document.title = caseyWebDev.State.cache[url].title;
 					$("#main").html(caseyWebDev.State.cache[url].html);
