@@ -29,9 +29,13 @@ end
 
 get "/*" do
 	if params[:splat][0] != ""
-		@doc = REDIS.get params[:splat][0]
-		unless @doc
+		raw = params[:splat][0].end_with? "/raw"
+		@doc = REDIS.get params[:splat][0][0..(raw ? -5 : -1)]
+		if !@doc
 			redirect "/"
+		elsif raw
+			content_type :txt
+			return @doc
 		end
 		@title = getTitle @doc
 	end
