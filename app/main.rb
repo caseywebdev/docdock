@@ -23,7 +23,7 @@ configure do
 	#max characters of doc to show as the title
 	TITLE_LENGTH = 64
 	#number of recent docs to show
-	RECENT_DOCS = 30
+	RECENT_DOCS = 90
 	set :public_folder, File.dirname(__FILE__)+"/../public"
 end
 
