@@ -55,10 +55,10 @@ post "*" do
 		if params["doc"].strip == ""
 			response["status"] = "doc empty"
 		else
-			id = REDIS.get "_id"
+			id = REDIS.get("_id").to_i.b BASE_62
 			unless REDIS.get(id) == params["doc"]
-				id = REDIS.incr "_id"
-				REDIS.set id.b(BASE_62), params["doc"]
+				id = REDIS.incr("_id").b(BASE_62)
+				REDIS.set id, params["doc"]
 			end
 			response["status"] = id
 		end

@@ -20,7 +20,7 @@ if (typeof docdock === "undefined" || docdock === null) {
 								caseyWebDev.PopUp.show("The doc is empty!", 1000);
 								$("#doc").val("").focus();
 							} else {
-								caseyWebDev.PopUp.show("Doc saved!", 1000);
+								caseyWebDev.PopUp.show("Doc saved!");
 								caseyWebDev.State.cache = [];
 								caseyWebDev.State.push("/"+data.status);
 							}
