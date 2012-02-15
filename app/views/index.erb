@@ -22,8 +22,16 @@ if not params.has_key? "pushState"
 		<div id="wrap">
 			<div id="main">
 <% else %><%= "<!--pushState-->\n#{title}\n" %><% end %>
+				<%
+				if @doc
+					url = "#{request.env["rack.url_scheme"]}://#{request.env["HTTP_HOST"]}#{request.env["REQUEST_PATH"]}";
+					raw = url+"/raw"
+				%>
+				<p><strong>URL</strong> <a href="<%= Rack::Utils.escape_html url %>"><%= url %></a><br>
+				<strong>Raw</strong> <a href="<%= Rack::Utils.escape_html raw %>"><%= raw %></a></p>
+				<% end %>
 				<textarea id="doc" data-placeholder="Paste or type your doc here and hit save doc.">
-<%= @doc ? Rack::Utils.escape_html(@doc) : "" %></textarea>
+<%= Rack::Utils.escape_html @doc %></textarea>
 				<script>$("#doc").tabby();</script>
 				<a id="saveDoc">Save doc</a>
 				<strong>Recent docs</strong>

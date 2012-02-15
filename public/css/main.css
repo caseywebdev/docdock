@@ -22,6 +22,9 @@ body {
 	font-size: 10px;
 	color: #333;
 }
+p {
+	margin-bottom: 10px;
+}
 #header {
 	position: relative;
 	min-width: 800px;
