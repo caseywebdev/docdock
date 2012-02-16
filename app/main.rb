@@ -64,7 +64,7 @@ post "*" do
 				id = REDIS.incr("_id").b(BASE_62)
 				REDIS.set id, params["doc"]
 			end
-			response["status"] = id
+			response[:status] = id
 		end
 	end
 	JSON.generate response
