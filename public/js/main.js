@@ -13,7 +13,7 @@ if (typeof docdock === "undefined" || docdock === null) {
 					docdock.xhr = $.post(
 						"/",
 						{
-							doc: $("#doc").data("empty") ? "" : $("#doc").val()
+							doc: $("#doc").value()
 						},
 						function(data) {
 							if (data.status == "doc empty") {
