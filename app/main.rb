@@ -13,7 +13,7 @@ configure do
 	BASE_62 = ("0".."9").to_a.join("")+("a".."z").to_a.join("")+("A".."Z").to_a.join("")
 	#define our Redis instance (params from Heroku getting started)
 	uri = URI.parse("redis://SituatedBanana:fcfa73afd9670528dde35516b026f4dd@carp.redistogo.com:9422/")
-  	REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+	REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 	REDIS.select 0
 	REDIS.setnx "_id", 0
 	#set the default page title, that is, if @title is never set
@@ -24,7 +24,18 @@ configure do
 	TITLE_LENGTH = 64
 	#number of recent docs to show
 	RECENT_DOCS = 90
-	set :public_folder, File.dirname(__FILE__)+"/../public"
+	set :public_folder, "#{File.dirname __FILE__}/../public"
+end
+
+get /^\/(coffee|scss)\/(.*)$/ do |type, file|
+	ext = type == "coffee" ? "js" : "css"
+	path = "#{File.dirname __FILE__}/../#{type}/#{file}.#{type}"
+	path2 = "#{File.dirname __FILE__}/../#{type}/#{file}.#{ext}"
+	if File.exist? path
+		(type == "coffee" ? `coffee -c "#{path}"` : `scss -C "#{path}" "#{path2}"`) unless File.exist?(path2) and File.mtime(path2) > File.mtime(path)
+		send_file path2
+	end
+	pass
 end
 
 get "/*" do
@@ -45,7 +56,7 @@ get "/*" do
 		id = lastId-i
 		if id > 0
 			idBase62 = id.b BASE_62
-			@recentDocs << { id: idBase62, doc: getTitle(REDIS.get(idBase62)) }
+			@recentDocs << { id: idBase62, doc: getTitle(REDIS.get idBase62) }
 		else
 			break
 		end
@@ -61,7 +72,7 @@ post "*" do
 		else
 			id = REDIS.get("_id").to_i.b BASE_62
 			unless REDIS.get(id) == params["doc"]
-				id = REDIS.incr("_id").b(BASE_62)
+				id = REDIS.incr("_id").b BASE_62
 				REDIS.set id, params["doc"]
 			end
 			response[:status] = id

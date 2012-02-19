@@ -8,34 +8,36 @@ if not params.has_key? "pushState"
 	<head>
 		<meta name="viewport" content="width=800">
 		<title><%= Rack::Utils.escape_html title %></title>
-		<link href="/css/main.css" type="text/css" rel="stylesheet">
+		<link href="/scss/main" type="text/css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 		<script src="https://raw.github.com/caseyWebDev/caseyWebDev/master/js/caseyWebDev.js"></script>
+		<script src="https://raw.github.com/caseyWebDev/caseyWebDev/master/js/jQPlugins.js"></script>
 		<script src="/js/jquery.textarea.js"></script>
-		<script src="/js/main.js"></script>
+		<script src="/coffee/main"></script>
 	</head>
 	
 	<body>
 		<div id="header">
-			<a href="/" id="logo"></a>
+			<a href="/" id="logo" data-push-state></a>
 		</div>
 		<div id="wrap">
 			<div id="main">
 <% else %><%= "<!--pushState-->\n#{title}\n" %><% end %>
-				<%
+				<textarea id="doc" data-placeholder="Paste or type your doc here and hit save doc.">
+<%= Rack::Utils.escape_html @doc %></textarea>
+				<script>$("#doc").tabby();</script>
+				<a id="saveDoc"<%= @doc ? %{ class="short"} : "" %>>Save doc</a><%
 				if @doc
 					url = "#{request.env["rack.url_scheme"]}://#{request.env["HTTP_HOST"]}#{request.env["REQUEST_PATH"]}";
 					raw = url+"/raw"
 				%>
-				<p><strong>URL</strong> <a href="<%= Rack::Utils.escape_html url %>"><%= url %></a><br>
-				<strong>Raw</strong> <a href="<%= Rack::Utils.escape_html raw %>"><%= raw %></a></p>
+				<div id="links">
+					<strong>URL</strong> <a href="<%= Rack::Utils.escape_html url %>"><%= url %></a><br>
+					<strong>Raw</strong> <a href="<%= Rack::Utils.escape_html raw %>"><%= raw %></a>
+				</div>
 				<% end %>
-				<textarea id="doc" data-placeholder="Paste or type your doc here and hit save doc.">
-<%= Rack::Utils.escape_html @doc %></textarea>
-				<script>$("#doc").tabby();</script>
-				<a id="saveDoc">Save doc</a>
-				<strong>Recent docs</strong>
 				<div id="recentDocs">
+					<h1>Recent docs</h1>
 					<% @recentDocs.each do |i| %><a href="/<%= i[:id]%>" data-push-state><%= Rack::Utils.escape_html i[:doc] %></a><% end %>
 				</div>
 <% if not params.has_key? "pushState" %>

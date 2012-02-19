@@ -1,0 +1,144 @@
+/*!!
+docdock main css
+Casey Foster
+caseyWebDev
+caseywebdev.com
+*/
+$bkg: url("/gfx/bkg.png");
+$shadow: 0 1px 3px rgba(0, 0, 0, .25);
+* {
+	margin: 0;
+	outline: 0;
+	border: 0;
+	padding: 0;
+	word-wrap: break-word;
+}
+a {
+	color: #390;
+	cursor: pointer;
+	text-decoration: none;
+	&:hover {
+		color: #280
+	}
+	&:active {
+		color: #170;
+	}
+}
+body {
+	background: #EEE $bkg;
+	font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+	font-size: 10px;
+	color: #333;
+}
+p {
+	margin-bottom: 10px;
+}
+#header {
+	position: relative;
+	min-width: 800px;
+	background: #333 $bkg;
+	box-shadow: $shadow;
+}
+#logo {
+	display: block;
+	height: 100px;
+	background: url("/gfx/logo.png") center center no-repeat;
+}
+#wrap {
+	margin: 0 auto;
+	width: 800px;
+}
+#main {
+	padding: 10px;
+	background: #FFF $bkg;
+	box-shadow: $shadow;
+}
+#doc {
+	padding: 10px;
+	width: 760px;
+	height: 410px;
+	font-family: monospace;
+	resize: none;
+	color: #333;
+	background: #FFF;
+	box-shadow: $shadow inset;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+#saveDoc {
+	display: block;
+	margin: 10px 0;
+	line-height: 40px;
+	color: #FFF;
+	font-size: 20px;
+	font-weight: bold;
+	text-shadow: $shadow;
+	background: #390 $bkg;
+	text-align: center;
+	box-shadow: $shadow inset;
+	&.short {
+		float: left;
+		margin: 10px 10px 10px 0;
+		width: 385px;
+	}
+	&:hover {
+		background-color: #280;
+	}
+	&:active {
+		background-color: #170;
+	}
+}
+#links {
+	margin: 10px 0;
+	font-size: 14px;
+	line-height: 20px;
+}
+#recentDocs {
+	padding: 10px;
+	background: #FFF;
+	box-shadow: $shadow inset;
+	a {
+		display: inline-block;
+		zoom: 1;
+		*display: inline;
+		padding: 10px;
+		width: 233px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		&:hover {
+			background: #FFF $bkg;
+			box-shadow: $shadow;
+		}
+		&:active {
+			box-shadow: $shadow inset;
+		}
+	}
+}
+#footer {
+	text-align: center;
+	padding: 10px;
+}
+#caseyWebDevPopUp {
+	display: none;
+	position: fixed;
+	z-index: 999999;
+	left: 0px;
+	top: 0px;
+	border-collapse: collapse;
+	> tbody > tr > td {
+		text-align: center;
+		vertical-align: middle;
+		background: #FFF $bkg;
+		background-color: rgba(255, 255, 255, .5);
+	}
+	> tbody > tr > td > div {
+		display: inline-block;
+		zoom: 1;
+		*display: inline;
+		cursor: default;
+		padding: 50px;
+		background: #FFF;
+		box-shadow: $shadow;
+	}
+}
