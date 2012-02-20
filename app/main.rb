@@ -55,7 +55,7 @@ get "/*" do
 	@recentDocs = []
 	REDIS.zrangebyscore("docs", lastId-RECENT_DOCS, lastId).reverse.each_with_index do |doc, i|
 		@recentDocs << {
-			id: i.b(BASE_62),
+			id: (lastId-i).b(BASE_62),
 			doc: getTitle(doc)
 		}
 	end
