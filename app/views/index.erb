@@ -32,7 +32,7 @@ if not params.has_key? "pushState"
 					raw = url+"/raw"
 				%>
 				<div id="links">
-					<strong>URL</strong> <a href="<%= Rack::Utils.escape_html url %>"><%= url %></a><br>
+					<strong>URL</strong> <a href="<%= Rack::Utils.escape_html url %>" data-push-state><%= url %></a><br>
 					<strong>Raw</strong> <a href="<%= Rack::Utils.escape_html raw %>"><%= raw %></a>
 				</div>
 				<% end %>
