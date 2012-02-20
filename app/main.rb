@@ -15,7 +15,6 @@ configure do
 	uri = URI.parse("redis://SituatedBanana:fcfa73afd9670528dde35516b026f4dd@carp.redistogo.com:9422/")
 	REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 	REDIS.select 0
-	REDIS.setnx "_id", 0
 	#set the default page title, that is, if @title is never set
 	DEFAULT_TITLE = "docdock | The Dock for Docs"
 	#set the title appendage so that the final title looks like @title+TITLE_APPENDAGE
@@ -51,7 +50,7 @@ get "/*" do
 		end
 		@title = getTitle @doc
 	end
-	lastId = REDIS.get("_id").to_i
+	lastId = REDIS.zcard "docs"
 	@recentDocs = []
 	REDIS.zrangebyscore("docs", lastId-RECENT_DOCS, lastId).reverse.each_with_index do |doc, i|
 		@recentDocs << {
@@ -71,7 +70,7 @@ post "*" do
 		else
 			id = REDIS.zscore("docs", doc)
 			unless id
-				id = REDIS.incr("_id")
+				id = REDIS.zcard("docs")+1
 				REDIS.zadd "docs", id, doc
 			end
 			response[:status] = id.b BASE_62
