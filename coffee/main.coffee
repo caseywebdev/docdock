@@ -30,7 +30,7 @@ unless docdock?
 		State:
 			init: ->
 				caseyWebDev.State.clear = (url) ->
-					$.scrollTo 0
+					$.scrollTo()
 					docdock.Ui.xhr.abort?()
 					clearTimeout docdock.State.loadingTimeout
 				caseyWebDev.State.before = (url) ->

@@ -41,7 +41,8 @@ end
 get "/*" do
 	if params[:splat][0] != ""
 		raw = params[:splat][0].end_with? "/raw"
-		@doc = REDIS.get params[:splat][0][0..(raw ? -5 : -1)]
+		id = params[:splat][0][0..(raw ? -5 : -1)].b BASE_62
+		@doc = REDIS.zrangebyscore("docs", id, id)[0]
 		if !@doc
 			redirect "/"
 		elsif raw
@@ -52,30 +53,28 @@ get "/*" do
 	end
 	lastId = REDIS.get("_id").to_i
 	@recentDocs = []
-	RECENT_DOCS.times do |i|
-		id = lastId-i
-		if id > 0
-			idBase62 = id.b BASE_62
-			@recentDocs << { id: idBase62, doc: getTitle(REDIS.get idBase62) }
-		else
-			break
-		end
+	REDIS.zrangebyscore("docs", lastId-RECENT_DOCS, lastId).reverse.each_with_index do |doc, i|
+		@recentDocs << {
+			id: i.b(BASE_62),
+			doc: getTitle(doc)
+		}
 	end
 	erb :index
 end
 
 post "*" do
 	response = {status: "missing param"}
-	if params["doc"]
-		if params["doc"].strip == ""
+	doc = params["doc"]
+	if doc
+		if doc.strip == ""
 			response[:status] = "doc empty"
 		else
-			id = REDIS.get("_id").to_i.b BASE_62
-			unless REDIS.get(id) == params["doc"]
-				id = REDIS.incr("_id").b BASE_62
-				REDIS.set id, params["doc"]
+			id = REDIS.zscore("docs", doc)
+			unless id
+				id = REDIS.incr("_id")
+				REDIS.zadd "docs", id, doc
 			end
-			response[:status] = id
+			response[:status] = id.b BASE_62
 		end
 	end
 	JSON.generate response

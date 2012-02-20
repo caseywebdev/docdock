@@ -50,7 +50,7 @@ caseywebdev.com
         init: function() {
           caseyWebDev.State.clear = function(url) {
             var _base;
-            $.scrollTo(0);
+            $.scrollTo();
             if (typeof (_base = docdock.Ui.xhr).abort === "function") {
               _base.abort();
             }
