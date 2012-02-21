@@ -4,15 +4,15 @@ Casey Foster
 caseyWebDev
 caseywebdev.com
 ###
-$ = jQuery
 unless docdock?
-	window.docdock =
-		init: ->
+	$ = jQuery
+	window.docdock = class
+		@init: ->
 			for k, v of docdock
 				v.init?()
-		Ui:
-			xhr: {}
-			init: ->
+		@Ui: class
+			@xhr: {}
+			@init: ->
 				$("#main").on "click", "#saveDoc", ->
 					docdock.Ui.xhr.abort?()
 					caseyWebDev.PopUp.show "Saving doc..."
@@ -27,8 +27,8 @@ unless docdock?
 								caseyWebDev.State.cache = []
 								caseyWebDev.State.push "/"+data.status
 					, "json"
-		State:
-			init: ->
+		@State: class
+			@init: ->
 				caseyWebDev.State.clear = (url) ->
 					$.scrollTo()
 					docdock.Ui.xhr.abort?()

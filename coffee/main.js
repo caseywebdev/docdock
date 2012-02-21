@@ -9,11 +9,13 @@ caseywebdev.com
 (function() {
   var $;
 
-  $ = jQuery;
-
   if (typeof docdock === "undefined" || docdock === null) {
-    window.docdock = {
-      init: function() {
+    $ = jQuery;
+    window.docdock = (function() {
+
+      function _Class() {}
+
+      _Class.init = function() {
         var k, v, _results;
         _results = [];
         for (k in docdock) {
@@ -21,10 +23,15 @@ caseywebdev.com
           _results.push(typeof v.init === "function" ? v.init() : void 0);
         }
         return _results;
-      },
-      Ui: {
-        xhr: {},
-        init: function() {
+      };
+
+      _Class.Ui = (function() {
+
+        function _Class() {}
+
+        _Class.xhr = {};
+
+        _Class.init = function() {
           return $("#main").on("click", "#saveDoc", function() {
             var _base;
             if (typeof (_base = docdock.Ui.xhr).abort === "function") {
@@ -44,10 +51,17 @@ caseywebdev.com
               }
             }, "json");
           });
-        }
-      },
-      State: {
-        init: function() {
+        };
+
+        return _Class;
+
+      })();
+
+      _Class.State = (function() {
+
+        function _Class() {}
+
+        _Class.init = function() {
           caseyWebDev.State.clear = function(url) {
             var _base;
             $.scrollTo();
@@ -69,9 +83,15 @@ caseywebdev.com
             document.title = caseyWebDev.State.cache[url].title;
             return $("#main").html(caseyWebDev.State.cache[url].html);
           };
-        }
-      }
-    };
+        };
+
+        return _Class;
+
+      })();
+
+      return _Class;
+
+    }).call(this);
     $(docdock.init);
   }
 
