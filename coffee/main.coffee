@@ -6,41 +6,41 @@ caseywebdev.com
 ###
 unless docdock?
 	$ = jQuery
-	window.docdock = class
-		@init: ->
-			for k, v of docdock
-				v.init?()
+	window.docdock = class extends caseyWebDev
 		@Ui: class
 			@xhr: {}
-			@init: ->
-				$("#main").on "click", "#saveDoc", ->
-					docdock.Ui.xhr.abort?()
-					caseyWebDev.PopUp.show "Saving doc..."
-					docdock.Ui.xhr = $.post "/"
+			@load: ->
+				$("#main").on "click", "#saveDoc", =>
+					@xhr.abort?()
+					docdock.PopUp.show "Saving doc..."
+					@xhr = $.post "/"
 						doc: $("#doc").val()
 					, (data) ->
 							if data.status is "doc empty"
-								caseyWebDev.PopUp.show "The doc is empty!", 1000
+								docdock.PopUp.show "The doc is empty!", 1000
 								$("#doc").val("").focus()
 							else
-								caseyWebDev.PopUp.show "Doc saved!"
-								caseyWebDev.State.cache = []
-								caseyWebDev.State.push "/"+data.status
+								docdock.PopUp.show "Doc saved!"
+								docdock.State.cache = []
+								docdock.State.push "/"+data.status
 					, "json"
-		@State: class
-			@init: ->
-				caseyWebDev.State.clear = (url) ->
-					$.scrollTo()
-					docdock.Ui.xhr.abort?()
-					clearTimeout docdock.State.loadingTimeout
-				caseyWebDev.State.before = (url) ->
-					docdock.State.loadingTimeout = setTimeout ->
-						caseyWebDev.PopUp.show "Loading..."
-					, 200
-				caseyWebDev.State.after = (url) ->
-					clearTimeout docdock.State.loadingTimeout
-					caseyWebDev.PopUp.hide()
-				caseyWebDev.State.parse = (url) ->
-					document.title = caseyWebDev.State.cache[url].title
-					$("#main").html caseyWebDev.State.cache[url].html
-	$ docdock.init
+		@State: class extends caseyWebDev.State
+			@load: ->
+				@updateCache location.href,
+					title: document.title
+					html: $("#main").html()
+			@clear = (url) ->
+				$.scrollTo()
+				docdock.Ui.xhr.abort?()
+				clearTimeout @loadingTimeout
+			@before = (url) ->
+				@loadingTimeout = setTimeout ->
+					docdock.PopUp.show "Loading..."
+				, 200
+			@after = (url) ->
+				clearTimeout @loadingTimeout
+				docdock.PopUp.hide()
+			@parse = (url) ->
+				document.title = @cache[url].title
+				$("#main").html @cache[url].html
+	docdock.init()
