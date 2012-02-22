@@ -8,6 +8,18 @@ def getTitle(doc)
 	firstLine.length <= TITLE_LENGTH ? firstLine : firstLine[0,TITLE_LENGTH-3]+"..."
 end
 
+def getRecentDocs
+	lastId = REDIS.zcard "docs"
+	recentDocs = []
+	REDIS.zrangebyscore("docs", lastId-RECENT_DOCS, lastId).reverse.each_with_index do |doc, i|
+		recentDocs << {
+			id: (lastId-i).b(BASE_62),
+			doc: getTitle(doc)
+		}
+	end
+	recentDocs
+end
+
 configure do
 	#set the base string we'll use for converting from base 10
 	BASE_62 = ("0".."9").to_a.join("")+("a".."z").to_a.join("")+("A".."Z").to_a.join("")
@@ -37,6 +49,10 @@ get /^\/(coffee|scss)\/(.*)$/ do |type, file|
 	pass
 end
 
+get "/docs/recent" do
+	JSON.generate getRecentDocs()
+end
+
 get "/*" do
 	if params[:splat][0] != ""
 		raw = params[:splat][0].end_with? "/raw"
@@ -50,14 +66,7 @@ get "/*" do
 		end
 		@title = getTitle @doc
 	end
-	lastId = REDIS.zcard "docs"
-	@recentDocs = []
-	REDIS.zrangebyscore("docs", lastId-RECENT_DOCS, lastId).reverse.each_with_index do |doc, i|
-		@recentDocs << {
-			id: (lastId-i).b(BASE_62),
-			doc: getTitle(doc)
-		}
-	end
+	@recentDocs = getRecentDocs()
 	erb :index
 end
 
@@ -69,7 +78,7 @@ post "*" do
 			response[:status] = "doc empty"
 		else
 			id = REDIS.zscore("docs", doc).to_i
-			unless id
+			unless id != 0
 				id = REDIS.zcard("docs")+1
 				REDIS.zadd "docs", id, doc
 			end

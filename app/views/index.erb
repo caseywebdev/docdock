@@ -21,25 +21,29 @@ if not params.has_key? "pushState"
 		</div>
 		<div id="wrap">
 			<div id="main">
+				<div id="pushState">
 <% else %><%= "<!--pushState-->\n#{title}\n" %><% end %>
-				<textarea id="doc" data-placeholder="Paste or type your doc here and hit save doc.">
+					<textarea id="doc" data-placeholder="Paste or type your doc here and hit save doc.">
 <%= Rack::Utils.escape_html @doc %></textarea>
-				<script>$("#doc").tabby();</script>
-				<a id="saveDoc"<%= @doc ? %{ class="short"} : "" %>>Save doc</a><%
-				if @doc
-					url = "#{request.env["rack.url_scheme"]}://#{request.env["HTTP_HOST"]}#{request.env["REQUEST_PATH"]}";
-					raw = url+"/raw"
-				%>
-				<div id="links">
-					<strong>URL</strong> <a href="<%= Rack::Utils.escape_html url %>" data-push-state><%= url %></a><br>
-					<strong>Raw</strong> <a href="<%= Rack::Utils.escape_html raw %>"><%= raw %></a>
-				</div>
-				<% end %>
-				<div id="recentDocs">
-					<h1>Recent docs</h1>
-					<% @recentDocs.each do |i| %><a href="/<%= i[:id]%>" data-push-state><%= Rack::Utils.escape_html i[:doc] %></a><% end %>
-				</div>
+					<script>$("#doc").tabby();</script>
+					<a id="saveDoc"<%= @doc ? %{ class="short"} : "" %>>Save doc</a><%
+					if @doc
+						url = "#{request.env["rack.url_scheme"]}://#{request.env["HTTP_HOST"]}#{request.env["REQUEST_PATH"]}";
+						raw = url+"/raw"
+					%>
+					<div id="links">
+						<strong>URL</strong> <a href="<%= Rack::Utils.escape_html url %>" data-push-state><%= url %></a><br>
+						<strong>Raw</strong> <a href="<%= Rack::Utils.escape_html raw %>"><%= raw %></a>
+					</div>
+					<% end %>
 <% if not params.has_key? "pushState" %>
+				</div>
+				<div id="recentDocsWrap">
+					<h1>Recent docs</h1>
+					<div id="recentDocs">
+						<% @recentDocs.each do |i| %><a href="/<%= i[:id]%>" data-push-state><%= Rack::Utils.escape_html i[:doc] %></a><% end %>
+					</div>
+				</div>
 			</div>
 			<div id="footer">Copyright &copy; docdock <%= Time.new.year %>. All rights reserved.</div>
 		</div>

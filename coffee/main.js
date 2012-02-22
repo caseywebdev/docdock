@@ -42,12 +42,53 @@ caseywebdev.com
                 docdock.PopUp.show("The doc is empty!", 1000);
                 return $("#doc").val("").focus();
               } else {
+                docdock.Poll.call();
                 docdock.PopUp.show("Doc saved!");
                 docdock.State.cache = [];
                 return docdock.State.push("/" + data.status);
               }
-            }, "json");
+            }, "json").error(function() {
+              return docdock.PopUp.show("Save error! Try again...");
+            });
           });
+        };
+
+        return _Class;
+
+      })();
+
+      _Class.Poll = (function() {
+
+        function _Class() {}
+
+        _Class.xhr = {};
+
+        _Class.interval = 0;
+
+        _Class.wait = 5;
+
+        _Class.load = function() {
+          var _this = this;
+          if (!this.interval) {
+            return this.interval = setInterval(function() {
+              return _this.call();
+            }, this.wait * 1000);
+          }
+        };
+
+        _Class.call = function() {
+          var _base,
+            _this = this;
+          if (typeof (_base = this.xhr).abort === "function") _base.abort();
+          return this.xhr = $.getJSON("/docs/recent", null, function(data) {
+            var doc, html, _i, _len;
+            html = "";
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+              doc = data[_i];
+              html += "<a href=\"/" + doc.id + "\" data-push-state>" + ($.escapeHtml(doc.doc)) + "</a>";
+            }
+            return $("#recentDocs").html(html);
+          }).error(function() {});
         };
 
         return _Class;
@@ -65,7 +106,7 @@ caseywebdev.com
         _Class.load = function() {
           return this.updateCache(location.href, {
             title: document.title,
-            html: $("#main").html()
+            html: $("#pushState").html()
           });
         };
 
@@ -89,7 +130,7 @@ caseywebdev.com
 
         _Class.parse = function(url) {
           document.title = this.cache[url].title;
-          return $("#main").html(this.cache[url].html);
+          return $("#pushState").html(this.cache[url].html);
         };
 
         return _Class;

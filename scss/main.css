@@ -86,11 +86,11 @@ p {
   font-size: 14px;
   line-height: 20px; }
 
-#recentDocs {
+#recentDocsWrap {
   padding: 10px;
   background: #FFF;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset; }
-  #recentDocs a {
+  #recentDocsWrap a {
     display: inline-block;
     zoom: 1;
     *display: inline;
@@ -99,10 +99,10 @@ p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; }
-    #recentDocs a:hover {
+    #recentDocsWrap a:hover {
       background: white url("/gfx/bkg.png");
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
-    #recentDocs a:active {
+    #recentDocsWrap a:active {
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset; }
 
 #footer {
