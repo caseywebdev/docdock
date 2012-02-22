@@ -68,7 +68,7 @@ post "*" do
 		if doc.strip == ""
 			response[:status] = "doc empty"
 		else
-			id = REDIS.zscore("docs", doc)
+			id = REDIS.zscore("docs", doc).to_i
 			unless id
 				id = REDIS.zcard("docs")+1
 				REDIS.zadd "docs", id, doc
