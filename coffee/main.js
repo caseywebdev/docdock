@@ -39,16 +39,16 @@ caseywebdev.com
               doc: $("#doc").val()
             }, function(data) {
               if (data.status === "doc empty") {
-                docdock.PopUp.show("The doc is empty!", 1000);
+                docdock.PopUp.show("The doc is empty!", 500);
                 return $("#doc").val("").focus();
               } else {
+                docdock.PopUp.show("Doc saved!", 500);
+                docdock.Poll.load();
                 docdock.Poll.call();
-                docdock.PopUp.show("Doc saved!");
-                docdock.State.cache = [];
                 return docdock.State.push("/" + data.status);
               }
             }, "json").error(function() {
-              return docdock.PopUp.show("Save error! Try again...");
+              return docdock.PopUp.show("Save error! Try again...", 500);
             });
           });
         };
@@ -69,11 +69,10 @@ caseywebdev.com
 
         _Class.load = function() {
           var _this = this;
-          if (!this.interval) {
-            return this.interval = setInterval(function() {
-              return _this.call();
-            }, this.wait * 1000);
-          }
+          clearInterval(this.interval);
+          return this.interval = setInterval(function() {
+            return _this.call();
+          }, this.wait * 1000);
         };
 
         _Class.call = function() {
@@ -87,7 +86,9 @@ caseywebdev.com
               doc = data[_i];
               html += "<a href=\"/" + doc.id + "\" data-push-state>" + ($.escapeHtml(doc.doc)) + "</a>";
             }
-            return $("#recentDocs").html(html);
+            if ($("#recentDocs").html() !== html) {
+              return $("#recentDocs").html(html);
+            }
           }).error(function() {});
         };
 
@@ -102,6 +103,10 @@ caseywebdev.com
         function _Class() {
           return _Class.__super__.constructor.apply(this, arguments);
         }
+
+        _Class.loadingTimeout = 0;
+
+        _Class.delay = 500;
 
         _Class.load = function() {
           return this.updateCache(location.href, {
@@ -120,7 +125,7 @@ caseywebdev.com
         _Class.before = function(url) {
           return this.loadingTimeout = setTimeout(function() {
             return docdock.PopUp.show("Loading...");
-          }, 200);
+          }, this.delay);
         };
 
         _Class.after = function(url) {
