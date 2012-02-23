@@ -14,7 +14,7 @@ end
 def getRecentDocs
 	lastId = REDIS.zcard "docs"
 	recentDocs = []
-	REDIS.zrangebyscore("docs", lastId-RECENT_DOCS, lastId).reverse.each_with_index do |doc, i|
+	REDIS.zrangebyscore("docs", lastId-RECENT_DOCS+1, lastId).reverse.each_with_index do |doc, i|
 		recentDocs << {
 			id: (lastId-i).b(BASE_62),
 			doc: getTitle(doc)
